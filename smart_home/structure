@@ -1,0 +1,19 @@
+smart_home/
+│
+├── main.py                   # ✅ Starts everything (the handler)
+├── config.py                 # ✅ Shared configs (broker, topics, QoS, etc.)
+├── mqtt_framework/
+│   ├── __init__.py
+│   ├── base_publisher.py     # ✅ Reusable MQTT Publisher base class
+│   ├── base_subscriber.py    # ✅ Reusable MQTT Subscriber base class
+│   └── logger.py             # ✅ Central logging setup
+│
+├── publishers/
+│   ├── __init__.py
+│   ├── temp_sensor.py        # ✅ Specific publisher (minimal code)
+│   └── light_sensor.py       # (more as needed)
+│
+├── subscribers/
+│   ├── __init__.py
+│   ├── heating_controller.py # ✅ Specific subscriber (minimal code)
+│   └── logging_service.py    # (more as needed)

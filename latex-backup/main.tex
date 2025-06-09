@@ -1,0 +1,114 @@
+\documentclass{article}
+\usepackage{graphicx} % Required for inserting images
+\usepackage[colorlinks=true, linkcolor=blue, citecolor=blue, urlcolor=blue]{hyperref}
+\usepackage{biblatex}
+\usepackage{csquotes}
+\addbibresource{refs.bib}
+
+\title{Event-Based Software Architecture}
+\author{Ruben Miller, Simon Heinzelmann, Tim Vetter}
+\date{May 2025}
+
+\begin{document}
+
+\maketitle
+
+\section{Introduction}
+
+\section{Our Implementation}
+
+In this section we will present our own solution to the architecture presented in the last chapters. We choose to showcase the architecture using a simulated "smart-home". Sensor signals were read by a small processing unit ("Arduino uno R3") and sent to a server via the mqtt-protocol. 
+In lack of more processing units, the same signals were sent back to the Arduino, which drove some parts (e.g. a small electric motor).
+
+\subsection{Preliminary decisions}
+\label{preliminary-decisions}
+
+We took some decisions, the main ones being the following:
+
+\begin{itemize}
+    \item MQTT-protocol
+    \item Smart Home as the showcase
+\end{itemize}
+
+The decisions will be explained further in the following two subsections, but in general, both fit well for showcase the event-based architecture but could have been replaced by equally viable options.
+
+\subsubsection{Messaging protocol}
+
+We use the Message Queuing Telemetry Transport (MQTT) protocol to send information between components. We chose this protocol for several reasons, but mostly because it is very lightweight, which is an important factor in smart home appliances, or the internet of things in general, as \textcite{8893617} finds. An existing open-source framework also was an advantage, more on this in \autoref{mosquitto-server}.
+
+\begin{quote}
+    ``MQTT offers the ability to send and receive data in near real time with a small footprint on the communication network and on the device itself.'' \cite[p.~1]{8893617}
+\end{quote}
+
+% TODO
+% THe protocoll uses TCP/IP
+% Very lightweight
+% Important: Architecture
+% mqtt implements a queue where subscriber and publishers are subsrcibed to
+% add a small diagram for the architecture
+
+% Question: Why did we choose the mqtt protocol?
+% -> Easy and fast to implement, solves all of our problems
+% For more complex setups another protocl, specificly tailored for the smarthome use case may be better
+
+Although there are several protocols for which detailed comparisons exist \cite{8755050}, in our showcase we would not notice the differences. 
+
+The protocol is \textquote{designed for power constrained and low bandwidth devices used for machine-to-machine (M2M) connectivity through IoT environments that work over TCP/IP} \cite[p.~1]{8893617}. It uses the publish - subscribe (pub/sub) architecture, where clients (publisher) send messages to a server, who then forwards the message to other clients (subscriber) \cite{8755050}.
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\linewidth]{img/mqtt-figure.png}
+    \caption{Sketch how the mqtt protocol cam be used in general.}
+    \label{fig:enter-label}
+\end{figure}
+
+\subsubsection{Using Smart Home as the showcase}
+% TODO: link to prior sections?
+
+In a Smart Home setting, sensors (e.g. light-sensor, temperature-sensor) or set rules need to be read and depending on them, an action may be taken. Establishing direct connections between sensors and the components that need the data from them will lead to a fixed and therefore inflexible solution. With the event-based architecture, all messages can be routed over a centralized component. This leads to an architecture which makes it easy to swap out, add and remove components. 
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\linewidth]{img/smart-home-figure.png}
+    \caption{Example of how a temperature sensor could be connected two two components in a smart home via the mqtt-protocol and a server.}
+    \label{fig:enter-label}
+\end{figure}
+
+\subsection{Implementation}
+
+In this subsection, we show the implementation we used, based on our decisions of \ref{preliminary-decisions}. In the following the hardware and programming code for the Arduino will be shown, the configuration and code for the server as well as our physical model. 
+
+
+\subsubsection{Arduino Uno R3}
+% Tell about:
+% Used arduino with sensors and other functions
+
+% Maybe polish this
+The Arduino Uno R3 was provided by the RWU to use for this project. It fits well, as the small storage and form factor approximate a device which could be classified as a smart home device. 
+However, we only used one, where in a typical smart-home, this would not be the same. This is where the showcase deviates from reality, as there would be different devices which publish and subscribe to the server. For example: In our showcase, the Arduino reads a sensor input, publishes it to the server, and then gets this message, as he subscribes to it. In reality, these would be two devices, e.g. a light sensor and the device which switches on the light in the room. 
+
+The code to run the Arduino was written by us and can be accessed in our \href{https://github.com/rubenMiller/EventBasedSoftwareArchitecture}{github}.
+% Make an electrical circuit diagram
+% mention key parts, such as the ethernet shield, the lcd display and other
+
+\subsubsection{Mosquitto Server}
+\label{mosquitto-server}
+
+The MQTT-protocol depends on a server, we choose the "mosquitto" package from \textcite{light2017mosquitto}. While there are many ways to access a server or broker \cite{mqtt-servers-brokers} we choose mosquitto, as it is open-source and we can self-host it. The organization behind this package\cite{mosquitto} notes some advantages that fit our project very well:
+
+\begin{quote}
+"Eclipse Mosquitto is an open source (EPL/EDL licensed) message broker that implements the MQTT protocol versions 5.0, 3.1.1 and 3.1. Mosquitto is lightweight and is suitable for use on all devices from low power single board computers to full servers.
+
+The MQTT protocol provides a lightweight method of carrying out messaging using a publish/subscribe model. This makes it suitable for Internet of Things messaging such as with low power sensors or mobile devices such as phones, embedded computers, or microcontrollers."
+\end{quote}
+
+In practice it proved to be easy to setup and no problems occurred; therefore, we choose to use it in our final implementation.
+
+\subsubsection{The physical model}
+
+We build a physical model resembling a simple house to better visualize our showcase. Components such as the Arduino, sensors and motors where build into it. The connection to the server was - as mentioned - done via an ethernet cable.
+
+
+
+\printbibliography
+
+\end{document}

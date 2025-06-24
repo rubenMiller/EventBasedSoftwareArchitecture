@@ -4,6 +4,7 @@
 #include "UltrasonicSensor.h"
 #include "StatusPublisher.h"
 #include "StepMotor.h"
+#include "AnalogSensor.h"
 #include <Servo.h>
 
 // Network configuration
@@ -14,9 +15,10 @@ IPAddress server(192, 168, 1, 100);
 EthernetClient ethClient;
 PubSubClient client(ethClient);
 
-UltrasonicSensor sensor(2, 3, client);
+UltrasonicSensor sensor(9, 10, client); // trigger pin, echo pin
 StatusPublisher statusPublisher(client);
 StepMotor stepMotor(4);  // Pin for servo motor
+AnalogSensor lightSensor(3, A0, client); // digital pin, analog pin
 
 
 void mqttCallback(char* topic, byte* payload, unsigned int length) {
@@ -58,6 +60,7 @@ void setup() {
   client.setCallback(mqttCallback);
 
   sensor.begin();
+  lightSensor.begin();
   stepMotor.begin();
   Serial.println("Setup completed");
 }
@@ -69,5 +72,6 @@ void loop() {
   client.loop();
 
   sensor.checkDistance();
+  lightSensor.readAndPublish();
   statusPublisher.publishStatus();
 }

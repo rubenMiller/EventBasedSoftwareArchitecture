@@ -46,3 +46,7 @@ In the project folder, most files are for the arduino, because most of the logic
 ```bash
 /etc/mosquitto/conf.d/default.conf
 ```
+
+## Architectural notes
+
+This project demonstrates an event-based architecture. Ideally, components would operate independently without relying on a centralized entry point. However, since we're working with a single Arduino, initializing everything from a main file is a practical necessity in this context.

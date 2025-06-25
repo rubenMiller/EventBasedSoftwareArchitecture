@@ -4,7 +4,7 @@
 #include "UltrasonicSensor.h"
 #include "StatusPublisher.h"
 #include "StepMotor.h"
-#include "AnalogSensor.h"
+#include "LightSensor.h"
 #include "LEDStrip.h"
 #include <Servo.h>
 
@@ -19,7 +19,7 @@ PubSubClient client(ethClient);
 UltrasonicSensor sensor(2, 6, client); // trigger pin, echo pin
 StatusPublisher statusPublisher(client);
 StepMotor stepMotor(4);  // Pin for servo motor
-AnalogSensor lightSensor(3, A0, client); // digital pin, analog pin
+LightSensor lightSensor(3, A0, client); // digital pin, analog pin
 LEDStrip ledStrip(13, 500); // Trigger pin, threshold to toggle LEDs
 
 
@@ -33,7 +33,7 @@ void mqttCallback(char* topic, byte* payload, unsigned int length) {
   Serial.print("Received message on topic: ");
   Serial.print(topic);
   Serial.print(" -> ");
-  Serial.println(message);
+  Serial.println(String(message));
 
   if (String(topic) == "arduino/ultrasonic_sensor") {
     // No message gets delivered here, only command to toggle the door

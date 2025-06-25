@@ -30,6 +30,8 @@ void StepMotor::switchState() {
 
 void StepMotor::handleCommand(const String& message) {
   int distance = message.toInt();
+  Serial.print("Received distance ");
+  Serial.println(distance);
   if(distance > 0 && distance < threshold){
     switchState();
   }

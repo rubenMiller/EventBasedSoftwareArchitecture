@@ -4,6 +4,8 @@
 class LEDStrip {
   int pin;
   int threshold;
+  bool isOn = false;
+
 
 public:
   LEDStrip(int triggerPin, int threshold = 500);

@@ -16,11 +16,11 @@ IPAddress server(192, 168, 1, 100);
 EthernetClient ethClient;
 PubSubClient client(ethClient);
 
-UltrasonicSensor sensor(2, 6, client); // trigger pin, echo pin
+UltrasonicSensor sensor(6, 7, client); // trigger pin, echo pin
 StatusPublisher statusPublisher(client);
-StepMotor stepMotor(4, 10);  // Set Pin, distance threshold
-LightSensor lightSensor(3, A0, client); // digital pin, analog pin
-LEDStrip ledStrip(13, 500); // Trigger pin, threshold to toggle LEDs
+StepMotor stepMotor(9, 10);  // Set Pin, distance threshold
+LightSensor lightSensor(5, A0, client); // digital pin, analog pin
+LEDStrip ledStrip(8, 500); // Trigger pin, threshold to toggle LEDs
 
 
 
@@ -61,9 +61,13 @@ void reconnect() {
 
 void setup() {
   Serial.begin(9600);
+
+
   Ethernet.begin(mac, ip);
   client.setServer(server, 1883);
   client.setCallback(mqttCallback);
+
+
 
   sensor.begin();
   lightSensor.begin();

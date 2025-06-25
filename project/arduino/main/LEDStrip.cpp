@@ -13,11 +13,11 @@ void LEDStrip::handleCommand(const String& message) {
   Serial.print("LEDStrip received value: ");
   Serial.println(value);
 
-  if (value >= threshold) {
-    digitalWrite(pin, HIGH);
-    Serial.println("LEDStrip: ON (above threshold)");
-  } else {
-    digitalWrite(pin, LOW);
-    Serial.println("LEDStrip: OFF (below threshold)");
+  bool shouldBeOn = value >= threshold;
+
+  if (shouldBeOn != isOn) {
+    isOn = shouldBeOn;
+    digitalWrite(pin, isOn ? HIGH : LOW);
+    Serial.println(isOn ? "LEDStrip: ON (above threshold)" : "LEDStrip: OFF (below threshold)");
   }
 }

@@ -17,11 +17,10 @@ EthernetClient ethClient;
 PubSubClient client(ethClient);
 
 UltrasonicSensor sensor(6, 7, client); // trigger pin, echo pin
-StatusPublisher statusPublisher(client);
 StepMotor stepMotor(9, 10);  // Set Pin, distance threshold
 LightSensor lightSensor(5, A0, client); // digital pin, analog pin
 LEDStrip ledStrip(8, 500); // Trigger pin, threshold to toggle LEDs
-
+StatusPublisher statusPublisher(client); // Sends messages that indicate the Arduino and the connection is working
 
 
 void mqttCallback(char* topic, byte* payload, unsigned int length) {
@@ -36,7 +35,6 @@ void mqttCallback(char* topic, byte* payload, unsigned int length) {
   Serial.println(String(message));
 
   if (String(topic) == "arduino/ultrasonic_sensor") {
-    // No message gets delivered here, only command to toggle the door
     stepMotor.handleCommand(message);
   } else if (String(topic) == "arduino/light_sensor") {
     ledStrip.handleCommand(message);
@@ -80,7 +78,7 @@ void loop() {
   if (!client.connected()) {
     reconnect();
   }
-  client.loop();
+  client.loop(); // Subscribers are checked up here
 
   sensor.checkDistance();
   lightSensor.readAndPublish();

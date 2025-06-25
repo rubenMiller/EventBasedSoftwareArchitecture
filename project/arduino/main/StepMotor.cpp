@@ -10,10 +10,10 @@ void StepMotor::begin() {
 }
 
 void StepMotor::switchState() {
-    // -120 moves 120 degree against the clock
-    // 120 moves with the clock
+    // negative values move the servo against the clock (at least in this setup)
+    // positive values move with the clock
   if (state == "open") {
-    myServo.write(120); // Adjust angle as needed
+    myServo.write(120); // Adjust angle as needed, this works well with a little overshoot
     Serial.println("StepMotor: Command received, state: " + state + ", therfore door gets closed.");
     state = "closed";
 
@@ -33,8 +33,8 @@ void StepMotor::handleCommand(const String& message) {
   unsigned long now = millis();
 
 
-  if(distance > 0 && distance < threshold){
-    if (now - lastMovement > cooldown) {
+  if(distance > 0 && distance < threshold){ // Zero values indicate wrong measurements and should not get here
+    if (now - lastMovement > cooldown) { 
       switchState();
       lastMovement = now;
     } else {

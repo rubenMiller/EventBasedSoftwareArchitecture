@@ -4,7 +4,7 @@ Servo myServo;
 const int servoPin = 4;
 
 const int trigPin = 2;  
-const int echoPin = 3; 
+const int echoPin = 6; 
 float duration, distance;  
 
 

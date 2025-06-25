@@ -7,6 +7,8 @@ class StepMotor {
   int threshold;
   Servo myServo;
   String state = "closed"; 
+  unsigned long lastMovement = 0;
+  const unsigned long cooldown = 2500;
 
 void switchState();
 

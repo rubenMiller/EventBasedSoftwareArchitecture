@@ -5,7 +5,7 @@ StatusPublisher::StatusPublisher(PubSubClient& mqttClient)
   : client(mqttClient), lastMsg(0) {}
 
 void StatusPublisher::publishStatus() {
-  if (millis() - lastMsg > 5000) {
+  if (millis() - lastMsg > timeDif) {
     lastMsg = millis();
     String msg = "Hello from Arduino at " + String(millis());
     client.publish("arduino/status", msg.c_str());

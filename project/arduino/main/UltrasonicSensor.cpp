@@ -12,6 +12,13 @@ void UltrasonicSensor::begin() {
 
 
 void UltrasonicSensor::checkDistance() {
+
+  unsigned long now = millis();
+  if(now - lastTest < timeDif){
+    return;
+  }
+  lastTest = now;
+
   char buffer[10];
 
   digitalWrite(trigPin, LOW);  
@@ -24,9 +31,11 @@ void UltrasonicSensor::checkDistance() {
   if (duration == 0) return;
 
   float distance = (duration * 0.0343) / 2;
-  Serial.print("Distance: ");
-  Serial.println(distance);
+
 
   dtostrf(distance, 4, 2, buffer); 
+
+  Serial.print("Distance: ");
+  Serial.println(distance);
   client.publish("arduino/ultrasonic_sensor", buffer);
 }

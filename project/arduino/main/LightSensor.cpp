@@ -9,6 +9,13 @@ void LightSensor::begin() {
 }
 
 void LightSensor::readAndPublish() {
+
+  unsigned long now = millis();
+  if(now - lastTest < timeDif){
+    return;
+  }
+  lastTest = now;
+
   char buffer[10];
   int analogVal = analogRead(analogPin);
 
@@ -19,5 +26,4 @@ void LightSensor::readAndPublish() {
 
   itoa(analogVal, buffer, 10); // Bad things would happen without this
   client.publish("arduino/light_sensor", buffer);
-  delay(1000);
 }

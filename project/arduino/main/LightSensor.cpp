@@ -8,12 +8,9 @@ void LightSensor::begin() {
   pinMode(digitalPin, INPUT_PULLUP);
 }
 
-static unsigned long lastRead = 0;
-int analogVal = 1023;
-char buffer[10];
-
 void LightSensor::readAndPublish() {
-  analogVal = analogRead(analogPin);
+  char buffer[10];
+  int analogVal = analogRead(analogPin);
 
   //Serial.print("Digital Read: ");
   //Serial.println(digitalVal);

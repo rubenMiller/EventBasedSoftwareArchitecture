@@ -9,12 +9,10 @@ void UltrasonicSensor::begin() {
   pinMode(echoPin, INPUT);
 }
 
+
+
 void UltrasonicSensor::checkDistance() {
-  digitalWrite(trigPin, LOW);
-  delayMicroseconds(2);
-  digitalWrite(trigPin, HIGH);
-  delayMicroseconds(10);
-  digitalWrite(trigPin, LOW);
+  char buffer[10];
 
   long duration = pulseIn(echoPin, HIGH);
   if (duration == 0) return;
@@ -23,8 +21,6 @@ void UltrasonicSensor::checkDistance() {
   Serial.print("Distance: ");
   Serial.println(distance);
 
-  if (distance > 0 && distance < 10) {
-    client.publish("arduino/ultrasonic_sensor", "true");
-    Serial.println("Published true to 'arduino/ultrasonic_sensor'.");
-  }
+  dtostrf(distance, 4, 2, buffer); 
+  client.publish("arduino/ultrasonic_sensor", buffer);
 }

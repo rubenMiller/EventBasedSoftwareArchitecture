@@ -18,7 +18,7 @@ PubSubClient client(ethClient);
 
 UltrasonicSensor sensor(2, 6, client); // trigger pin, echo pin
 StatusPublisher statusPublisher(client);
-StepMotor stepMotor(4);  // Pin for servo motor
+StepMotor stepMotor(4, 10);  // Set Pin, distance threshold
 LightSensor lightSensor(3, A0, client); // digital pin, analog pin
 LEDStrip ledStrip(13, 500); // Trigger pin, threshold to toggle LEDs
 
@@ -37,7 +37,7 @@ void mqttCallback(char* topic, byte* payload, unsigned int length) {
 
   if (String(topic) == "arduino/ultrasonic_sensor") {
     // No message gets delivered here, only command to toggle the door
-    stepMotor.handleCommand();
+    stepMotor.handleCommand(message);
   } else if (String(topic) == "arduino/light_sensor") {
     ledStrip.handleCommand(message);
   }

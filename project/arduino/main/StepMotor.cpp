@@ -1,15 +1,15 @@
 #include "StepMotor.h"
 #include <Arduino.h>
 
-StepMotor::StepMotor(int pin) : servoPin(pin) {}
+StepMotor::StepMotor(int pin, int thresholdVal) 
+: servoPin(pin), threshold(thresholdVal) {}
 
-String state = "closed";
 
 void StepMotor::begin() {
   myServo.attach(servoPin);
 }
 
-void StepMotor::handleCommand() {
+void StepMotor::switchState() {
     // -120 moves 120 degree against the clock
     // 120 moves with the clock
   if (state == "open") {
@@ -17,13 +17,20 @@ void StepMotor::handleCommand() {
     Serial.println("StepMotor: Command received, state: " + state + ", therfore door gets closed.");
     state = "closed";
     delay(3000);
-} else if (state == "closed") {
+  } else if (state == "closed") {
     myServo.write(-120); // opening our door is against the clock
     Serial.println("StepMotor: Command received, state: " + state + ", therfore door gets opened.");
     state = "open";
     delay(3000);
-} else {
+  } else {
     Serial.print("StepMotor: Unknown state -> ");
     Serial.println(state);
+  }
+}
+
+void StepMotor::handleCommand(const String& message) {
+  int distance = message.toInt();
+  if(distance > 0 && distance < threshold){
+    switchState();
   }
 }

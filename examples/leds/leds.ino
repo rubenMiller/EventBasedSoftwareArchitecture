@@ -6,7 +6,7 @@ void setup() {
   //start serial connection
   Serial.begin(9600);
 
-  pinMode(13, OUTPUT);
+  pinMode(8, OUTPUT);
   Serial.println("Hello");
 }
 
@@ -14,10 +14,10 @@ void loop() {
   printf("Starting");
 
 
-  digitalWrite(13, LOW);
+  digitalWrite(8, LOW);
   delay(1000);
   Serial.println("shouldn't shine");
-  digitalWrite(13, HIGH);
+  digitalWrite(8, HIGH);
   delay(1000);
   Serial.println("should shine");
 
